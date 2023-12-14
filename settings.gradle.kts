@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Compose Navigation"
 include(":jetpack-compose-navigation")
+include(":login")
+include(":registration")
