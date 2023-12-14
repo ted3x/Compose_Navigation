@@ -21,6 +21,7 @@ import ge.ted3x.jetpack_compose_navigation.slides.deeplinksSlide
 import ge.ted3x.jetpack_compose_navigation.slides.destinationsSlide
 import ge.ted3x.jetpack_compose_navigation.slides.navControllerSlide
 import ge.ted3x.jetpack_compose_navigation.slides.navHostSlide
+import ge.ted3x.jetpack_compose_navigation.slides.nestedNavigation
 import ge.ted3x.jetpack_compose_navigation.slides.uri
 import ge.ted3x.jetpack_compose_navigation.slides.whatIsNavigation
 import ge.ted3x.jetpack_compose_navigation.ui.theme.AppTheme
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
                             navControllerSlide(navController)
                             argumentsSlide()
                             deeplinksSlide()
+                            nestedNavigation()
                             composable(
                                 route = "dummyslide?id={id}",
                                 deepLinks = listOf(navDeepLink { uriPattern = "$uri/{id}" })
@@ -84,5 +86,6 @@ val hierarchy = mapOf(
     "navhost" to Hierarchy("destinations", "navcontroller"),
     "navcontroller" to Hierarchy("navhost", "arguments"),
     "arguments" to Hierarchy("navcontroller", "deeplinks"),
-    "deeplinks" to Hierarchy("arguments", null)
+    "deeplinks" to Hierarchy("arguments", "nested_navigation"),
+    "nested_navigation" to Hierarchy("deeplinks", null)
 )
