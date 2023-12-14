@@ -12,12 +12,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import ge.ted3x.jetpack_compose_navigation.control.SlideController
+import ge.ted3x.jetpack_compose_navigation.slides.DummySlide
 import ge.ted3x.jetpack_compose_navigation.slides.IntroductionSlide
 import ge.ted3x.jetpack_compose_navigation.slides.argumentsSlide
+import ge.ted3x.jetpack_compose_navigation.slides.deeplinksSlide
 import ge.ted3x.jetpack_compose_navigation.slides.destinationsSlide
 import ge.ted3x.jetpack_compose_navigation.slides.navControllerSlide
 import ge.ted3x.jetpack_compose_navigation.slides.navHostSlide
+import ge.ted3x.jetpack_compose_navigation.slides.uri
 import ge.ted3x.jetpack_compose_navigation.slides.whatIsNavigation
 import ge.ted3x.jetpack_compose_navigation.ui.theme.AppTheme
 
@@ -43,12 +47,26 @@ class MainActivity : ComponentActivity() {
                             navHostSlide()
                             navControllerSlide(navController)
                             argumentsSlide()
+                            deeplinksSlide()
+                            composable(
+                                route = "dummyslide?id={id}",
+                                deepLinks = listOf(navDeepLink { uriPattern = "$uri/{id}" })
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments?.getString("id")
+                                DummySlide(id)
+                            }
                         }
                         currentEntry.value?.let {
-                            SlideController(
-                                hierarchy = hierarchy[it.destination.route]!!,
-                                onNextClick = { nextDestination -> navController.navigate(nextDestination) },
-                                onPreviousClick = { navController.popBackStack() })
+                            hierarchy[it.destination.route]?.let { hierarchy ->
+                                SlideController(
+                                    hierarchy = hierarchy,
+                                    onNextClick = { nextDestination ->
+                                        navController.navigate(
+                                            nextDestination
+                                        )
+                                    },
+                                    onPreviousClick = { navController.popBackStack() })
+                            }
                         }
                     }
                 }
@@ -65,5 +83,6 @@ val hierarchy = mapOf(
     "destinations" to Hierarchy("whatisnavigation", "navhost"),
     "navhost" to Hierarchy("destinations", "navcontroller"),
     "navcontroller" to Hierarchy("navhost", "arguments"),
-    "arguments" to Hierarchy("navcontroller", null)
+    "arguments" to Hierarchy("navcontroller", "deeplinks"),
+    "deeplinks" to Hierarchy("arguments", null)
 )
