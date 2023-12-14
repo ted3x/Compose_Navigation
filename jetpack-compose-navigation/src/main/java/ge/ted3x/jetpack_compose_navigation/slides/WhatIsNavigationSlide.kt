@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import ge.ted3x.jetpack_compose_navigation.components.BulletPoint
 import ge.ted3x.jetpack_compose_navigation.components.ExampleScreen
 import ge.ted3x.jetpack_compose_navigation.components.SlideRoot
+import ge.ted3x.jetpack_compose_navigation.components.SlideTitle
 
 private const val ROUTE = "whatisnavigation"
 
@@ -39,13 +40,7 @@ private fun WhatIsNavigationSlide(modifier: Modifier = Modifier) {
         val exampleType = remember {
             mutableStateOf<ExampleType?>(null)
         }
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            text = "What is Navigation?",
-            style = MaterialTheme.typography.displayMedium,
-            fontWeight = FontWeight.Bold
-        )
+        SlideTitle(title = "What is Navigation?")
 
         Row(
             horizontalArrangement = Arrangement.SpaceAround,

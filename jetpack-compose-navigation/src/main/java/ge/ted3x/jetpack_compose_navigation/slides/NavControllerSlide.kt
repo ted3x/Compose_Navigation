@@ -31,6 +31,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ge.ted3x.jetpack_compose_navigation.components.Action
 import ge.ted3x.jetpack_compose_navigation.components.LocalScreen
+import ge.ted3x.jetpack_compose_navigation.components.SlideRoot
+import ge.ted3x.jetpack_compose_navigation.components.SlideTitle
 
 private const val ROUTE = "navcontroller"
 
@@ -42,25 +44,19 @@ fun NavGraphBuilder.navControllerSlide(navController: NavController) {
 
 @Composable
 private fun NavControllerSlide(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.9f)
-            .padding(32.dp),
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            text = "Jetpack Compose Overview",
-            style = MaterialTheme.typography.displayMedium,
-            fontWeight = FontWeight.Bold
-        )
+    SlideRoot(modifier) {
+        SlideTitle(title = "NavController in Navigation Component")
         Spacer(modifier = Modifier.height(12.dp))
 
         val navController = rememberNavController()
+        val message = remember { mutableStateOf("") }
 
+        ResetButtons(navController = navController)
+        Column {
+            ErrorText(message = message.value) { message.value = "" }
+            navController.BackStackInfo()
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val message = remember { mutableStateOf("") }
             NavHost(navController = navController, startDestination = "first") {
                 firstScreen(navController)
                 secondScreen(navController)
@@ -68,28 +64,8 @@ private fun NavControllerSlide(modifier: Modifier = Modifier) {
                 fourthScreen()
             }
             Spacer(modifier = Modifier.width(32.dp))
-            Column {
-                ErrorText(message = message.value) { message.value = "" }
-                navController.BackStackInfo()
-            }
         }
-        Button(onClick = {
-            navController.navigate("first") {
-                popUpTo(navController.graph.id) { inclusive = true }
-            }
-        }) {
-            Text(text = "Reset")
-        }
-        Button(onClick = {
-            navController.navigate("first") {
-                popUpTo(navController.graph.id) {
-                    inclusive = true
-                }
-                restoreState = true
-            }
-        }) {
-            Text(text = "Reset with Saved State")
-        }
+
     }
 }
 
@@ -114,22 +90,18 @@ fun NavGraphBuilder.firstScreen(navController: NavController) {
 fun NavGraphBuilder.secondScreen(navController: NavController) {
     composable("second") {
         LocalScreen(title = "Second") {
-            Button(onClick = {
+            Action(text = "Navigate to second with launchSingleTop") {
                 navController.navigate("second") {
                     launchSingleTop = true
                 }
-            }) {
-                Text(text = "Navigate to second with launchSingleTop")
             }
-            Button(onClick = {
+            Action(text = "Navigate to second") {
                 navController.navigate("second") {
                     launchSingleTop = false
                 }
-            }) {
-                Text(text = "Navigate to second")
             }
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "Back to First")
+            Action(text = "Back to First") {
+                navController.popBackStack()
             }
         }
     }
@@ -202,4 +174,25 @@ fun ErrorText(message: String, clearMessage: () -> Unit) {
         style = MaterialTheme.typography.headlineMedium,
         modifier = Modifier.clickable(onClick = clearMessage)
     )
+}
+
+@Composable
+private fun ResetButtons(navController: NavController) {
+    Button(onClick = {
+        navController.navigate("first") {
+            popUpTo(navController.graph.id) { inclusive = true }
+        }
+    }) {
+        Text(text = "Reset")
+    }
+    Button(onClick = {
+        navController.navigate("first") {
+            popUpTo(navController.graph.id) {
+                inclusive = true
+            }
+            restoreState = true
+        }
+    }) {
+        Text(text = "Reset with Saved State")
+    }
 }
