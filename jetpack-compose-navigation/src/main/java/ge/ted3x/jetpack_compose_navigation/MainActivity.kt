@@ -14,6 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ge.ted3x.jetpack_compose_navigation.control.SlideController
 import ge.ted3x.jetpack_compose_navigation.slides.IntroductionSlide
+import ge.ted3x.jetpack_compose_navigation.slides.argumentsSlide
 import ge.ted3x.jetpack_compose_navigation.slides.destinationsSlide
 import ge.ted3x.jetpack_compose_navigation.slides.navControllerSlide
 import ge.ted3x.jetpack_compose_navigation.slides.navHostSlide
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
                             destinationsSlide()
                             navHostSlide()
                             navControllerSlide(navController)
+                            argumentsSlide()
                         }
                         currentEntry.value?.let {
                             SlideController(
@@ -62,5 +64,6 @@ val hierarchy = mapOf(
     "whatisnavigation" to Hierarchy("introduction", "destinations"),
     "destinations" to Hierarchy("whatisnavigation", "navhost"),
     "navhost" to Hierarchy("destinations", "navcontroller"),
-    "navcontroller" to Hierarchy("navhost", null)
+    "navcontroller" to Hierarchy("navhost", "arguments"),
+    "arguments" to Hierarchy("navcontroller", null)
 )

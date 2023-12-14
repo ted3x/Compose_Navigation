@@ -40,10 +40,6 @@ fun NavGraphBuilder.navControllerSlide(navController: NavController) {
     }
 }
 
-fun NavController.navigateToNavController() {
-    navigate(ROUTE)
-}
-
 @Composable
 private fun NavControllerSlide(modifier: Modifier = Modifier) {
     Column(
